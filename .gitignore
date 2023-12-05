@@ -1,0 +1,19 @@
+## API KEY
+**/.env
+
+## Editors
+**/.history
+**/.vscode
+
+## Dir_dependency
+**/node_modules
+
+## OS 
+**/.DS_Store
+**/Thumbs.db
+
+## Todo
+**/readme.md
+**/read.txt
+
+## Other

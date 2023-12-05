@@ -1,8 +1,8 @@
 # CHAT_APP
-## tạo node_modules
-npm i
 ## vào thư mục /source
 cd source
+## tạo node_modules
+npm i
 ## tạo dependencies
 npm i --save-dev nodemon
 npm i --save-dev connect-flash

@@ -19,7 +19,7 @@ const register = async (req, res, next) => {
         // validate information register
         const result = validationResult(req)
         if (result.errors.length > 0) {
-            console.log(result.errors)
+            
             req.flash('err', result.errors[0].msg)
             return res.redirect('/api/auth/register')
         }
@@ -50,6 +50,9 @@ const register = async (req, res, next) => {
 }
 
 const login = async (req, res, next) => {
+    if(req.session.user) {
+        return res.redirect('/api/auth/dashboard')
+    }
     let err = req.flash('err')
     res.render('user/logIn', { err, showHeader: false })
 }
@@ -92,9 +95,18 @@ const logout = async (req, res, next) => {
 }
 
 const loadDashboard = async (req, res, next) => {
+    if(!req.session.user) {
+        return res.redirect('/api/auth/login')
+    }
     const { fullName } = req.session.user;
     var data = await User.find({_id: { $nin: [req.session.user._id] } })
     res.render('dashboard/dashboard', { user: req.session.user, data: MgMultiToObject(data), fullName, showHeader: true })
+}
+
+const getListId = async (req,res, next) => {
+    const list = await User.find().select('_id')
+    const is_online = await User.find().select('is_online')
+    res.json({success : true, list , is_online})
 }
 
 module.exports = {
@@ -105,4 +117,5 @@ module.exports = {
     loginUser,  
     logout,
     loadDashboard,  
+    getListId,
 }

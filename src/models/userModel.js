@@ -26,6 +26,9 @@ var userSchema = new Schema({
     is_online:{
         type: String,
         default: '0',
+    },
+    last_logout:{
+        type: Date,
     }
 },  {timestamp:true},
 );

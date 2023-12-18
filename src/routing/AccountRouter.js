@@ -28,6 +28,6 @@ router.get("/logout", accountController.logout);
 router.get("/dashboard", accountController.loadDashboard);
 
 // [GET] /home
-router.get("/home", accountController.home);
+router.get("/list", accountController.getListId);
 
 module.exports = router

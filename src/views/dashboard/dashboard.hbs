@@ -15,7 +15,10 @@
                                 <span class="status-indicator_offline"></span>
                             {{/isOnline}}
                             <img src="/images/{{this.image}}" alt="" id="image" data-id="{{this.image}}">
-                            <p>{{this.fullName}} </p>
+                            <div class="user-info">
+                                <p class="activity-name">{{this.fullName}} </p>
+                                <p class="activity-status" id="{{this._id}}" data-time="{{this.last_logout}}"></p>
+                            </div>
                         </li>
                     {{/each}}
                 {{/equals}}

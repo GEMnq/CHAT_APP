@@ -54,7 +54,7 @@ usp.on('connection', async function(socket){
 
         await User.findByIdAndUpdate(
             {_id: userId,},
-            {$set: {is_online: '0'}},
+            {$set: {is_online: '0', last_logout: new Date()}},
             {new: true}
         );
         socket.broadcast.emit('setOffline', {userId: userId})
@@ -78,8 +78,7 @@ usp.on('connection', async function(socket){
 })
 
 
-// listen port
+// listen server
 httpServer.listen(port, () => {
     console.log(`App listening on port ${port}`);
 });
-  

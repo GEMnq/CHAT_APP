@@ -1,6 +1,8 @@
 var senderId = $('#senderId').text();
 var receiverId; 
 var image;
+var lastLogoutTime;
+
 const socket = io('/user-namespace', {
     auth: {
         token: senderId,
@@ -9,6 +11,23 @@ const socket = io('/user-namespace', {
 
 
 $(document).ready(function() {
+    $.ajax({
+        url: 'http://localhost:3010/api/auth/list',
+        type: 'GET',
+        success: function(data) {
+            if(data.success) {
+                list = data.list
+                listStatus = data.is_online
+                for (let i in data.list) {
+                    updateActivityStatus(list[i]._id, listStatus[i].is_online)
+                }
+            }
+            else {
+                alert(data.msg)
+            }
+        }
+    })  
+
     $('.user-list').click(function(){
         const $userItems = $("#chat-container");
         const colorList = ["#d9f6f6", "#dfe7fe", "#f0d3e2", "#def2ee", "#d7f4dc", "#eae4b9", "#c1c8e3"];
@@ -24,7 +43,7 @@ $(document).ready(function() {
         receiverId  = userId
         $('.start-head').hide();
         $('.chat-section').show();
-
+        
         socket.emit('existsChat', { sender_id: senderId, receiver_id: receiverId});
     })
 });
@@ -54,7 +73,6 @@ $('#chat-form').submit(function(event) {
             image,
         },
         success: function(data) {
-            console.log(data)
             if(data.success) {
                 $('#message').val('')
                 let chat = data.chatMessage.message
@@ -130,4 +148,40 @@ function scrollChat() {
     $('#chat-container').animate({
         scrollTop: $('#chat-container').offset().top + $('#chat-container')[0].scrollHeight
     }, 0)
+}
+
+// set time status
+function getTime(date) {
+    let currentDate = new Date();
+
+    let diff = currentDate - date;
+    
+    if (diff < 1000 * 10) return "just now"; // < 10s
+    else if (diff < 1000 * 60) {             // < 1p
+        let diffSecs = Math.floor(Math.abs(diff) / 1000);
+        return diffSecs + " secs ago";
+    }  
+    else if (diff < 1000 * 60 * 60) {         // < 1h
+        let diffMins = Math.round(((diff % 86400000) % 3600000) / 60000); 
+        return diffMins + " mins ago";
+    }
+    else if (diff < 1000 * 60 * 60 * 24) {     // < 24h 
+        let diffHours = Math.round((diff % 86400000) / 3600000);
+        return diffHours + " hours ago"; 
+    }
+    else {
+        let diffDays = Math.floor(diff / 86400000); 
+        return diffDays + " days ago";
+    }
+}
+
+function updateActivityStatus(id, status) {
+    const activityTime = $('#'+ id);
+    const lastLogoutTime = new Date(activityTime.attr('data-time'));
+    const elapsedTime = getTime(lastLogoutTime);
+    if (status == "1") {
+        activityTime.text("just now");
+    } else {
+        activityTime.text(elapsedTime);
+    }  
 }

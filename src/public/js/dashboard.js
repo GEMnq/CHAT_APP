@@ -94,6 +94,7 @@ $('#chat-form').submit(function(event) {
     })
 })
 
+// load new chat
 socket.on('loadNewChat', (data) => {
     if(senderId == data.receiver_id && receiverId == data.sender_id) {
         var imageSrc = "/images/" + data.image;

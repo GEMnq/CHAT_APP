@@ -44,6 +44,7 @@ const configServer = (app, pathDirname) => {
 
     // config cookie
     app.use(cookieParser("secret_password_here"));
+    
     // config session
     app.use(session({
         secret: process.env.SESSION_SECRET,

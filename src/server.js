@@ -18,14 +18,12 @@ db.connect()
 const app = express();
 const port = process.env.PORT || 3000;
 
-
 // config server
 configServer(app, __dirname);
 
 // router
 app.use('/api/auth', AccountRouter)
 app.use('/api/auth', ChatRouter)
-
 
 // middleware error
 app.use(error.notFound)
@@ -46,7 +44,7 @@ usp.on('connection', async function(socket){
         {$set: {is_online: '1'}},
         {new: true}
     )
-    // gửi cho all people
+    // send message for all people
     socket.broadcast.emit('setOnline', {userId: userId})
    
     socket.on('disconnect', async function(){
@@ -76,7 +74,6 @@ usp.on('connection', async function(socket){
         socket.emit('loadChat', { chat, image })
     })
 })
-
 
 // listen server
 httpServer.listen(port, () => {
